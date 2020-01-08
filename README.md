@@ -17,7 +17,7 @@ See *ShortManual.md* for a little more documentation.
 
 ## Development environment
 
-This very version has been tested release with:
+This very version has been tested with:
 
 * Visual Studio Code
 * Java extension Visual Studio Code
