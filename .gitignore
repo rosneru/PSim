@@ -1,1 +1,12 @@
+# Ignore Maven directories and files
+log/
+target/
+
+# Ignore eclipse files
+.project
+.classpath
+.settings/
+
 *.class
+*.log
+~*
