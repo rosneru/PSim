@@ -16,8 +16,9 @@ import model.M_PNTransition;
 
 
 /**
- * Klasse für Transitionen in der View. Abgeleitet von V_ElementRoot. Ist mit der zugehörigen Transition in der 
- * Logik verknüpft und beobachtet (implements Observer) diese.
+ * Klasse für Transitionen in der View. Abgeleitet von V_ElementRoot.
+ * Ist mit der zugehörigen Transition in der Logik verknüpft und
+ * beobachtet (implements Observer) diese.
  * @author Uwe Rosner
  *
  */
@@ -33,18 +34,27 @@ public class V_PNTransition extends V_ElementRoot implements Observer, Runnable 
 
     // Zum Blinken-Lassen der Transition wird folgendes gebraucht:
     ActionListener act;
-    transient Thread flashThread; // 'transient' bedeutet: der Thread soll nicht mit gespeichert (serialisiert) werden.
-                                  // Das würde nämlich eine Exception auslösen, da ein Thread die Klasse
-                                  // Serializable nicht implementiert.
+    transient Thread flashThread;   // `transient` bedeutet: der Thread 
+                                    // soll nicht mit gespeichert
+                                    // (serialisiert) werden. Denn das
+                                    // würde eine Exception auslösen, da
+                                    // ein Thread die Klasse
+                                    // Serializable nicht implementiert.
 
     /**
-     * Erzeugt eine neue Transition in der View. Als besonderer Parameter taucht hier ein ActionListener auf, der
-     * beim threadgesteuerten Blinken der Transition (wenn sie erfolgreich gerechnet hat) aufgerufen wird, um die
-     * Anzeige für jeden (Blink-)Schritt aktualisieren zu lassen.
-     * @param cx x - Koordinate, an der das Element platziert werden soll.
-     * @param cy y - Koordinate, an der das Element platziert werden soll.
-     * @param model - Logik-Represäntation des zu erzeugenden View-Elementes.
-     * @param act ActionListener, dem die Nachricht zum Neuzeichnen der Anzeige (View) gesendet werden kann.
+     * Erzeugt eine neue Transition in der View. Als besonderer
+     * Parameter taucht hier ein ActionListener auf, der beim
+     * threadgesteuerten Blinken der Transition (wenn sie erfolgreich
+     * gerechnet hat) aufgerufen wird, um die Anzeige für jeden
+     * (Blink-)Schritt aktualisieren zu lassen.
+     * @param cx x - Koordinate, an der das Element platziert werden
+     * soll.
+     * @param cy y - Koordinate, an der das Element platziert werden
+     * soll.
+     * @param model - Logik-Represäntation des zu erzeugenden
+     * View-Elementes.
+     * @param act ActionListener, dem die Nachricht zum Neuzeichnen der
+     * Anzeige (View) gesendet werden kann.
      */
     public V_PNTransition(int cx, int cy, Object model, ActionListener act) {
         flashThread = null;
@@ -52,7 +62,7 @@ public class V_PNTransition extends V_ElementRoot implements Observer, Runnable 
 
         this.act = act;
 
-        // Modell initialsieren
+        // Modell initialisieren
         this.model = (M_PNTransition)model;
         this.model.addObserver(this);
 

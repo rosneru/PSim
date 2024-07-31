@@ -17,20 +17,41 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
   private static final long serialVersionUID = 1L;
   private Logic model;            // Die Programmlogik.
 
-  private VI_Element elementGui = null;       // Das auf der Arbeitsoberfläche (drawing_area) markierte Element
-  private GUI_WindowProperties windowPrprty;  // Das Fenster zum Einstellen der Elementeigenschaften.
-  private GUI_WindowWeights windowWeights;    // Das Fenster zum Einstellen der EGewichte.
+  // Das auf der Arbeitsoberfläche (drawing_area) markierte Element
+  private VI_Element selectedItem = null;
+
+  // Das Fenster zum Einstellen der Elementeigenschaften.
+  private GUI_WindowProperties propertyWindow;
+
+  // Das Fenster zum Einstellen der EGewichte.
+  private GUI_WindowWeights weightsWindow;
 
   /**
    * Das Hintergrund-Panel.
    */
-  private JPanel  background;           // Das Panel, auf dem die anderen Komponenten platziert werden
-  private GUI_DrawingArea drawing_area; // Die Arbeitsfläche, auf die Transitionen, Stellen und Kanten platziert werden
-  private GUI_Sidebar right_sidebar;    // Leiste am rechten Bildschirmrand, auf der sich Schaltflächen und Informationen befinden
-  private GUI_Statebar down_statebar;   // Statuszeile am unteren Rand des Simulators. Zum Anzeigen von Mitteilungen und Fehlern.
-  private GUI_PopupMenu popup_menu;     // Das Popup-Menü, das sich beim Rechtsklicken auf die drawing_area öffnet.
 
-  transient Thread runUntilDeadlock;    // Der Thread, der für die Hintergrundausführung der Funktion "Ausführen bis Verklemmung" benötigt wird.
+  // Das Panel, auf dem die anderen Komponenten platziert werden
+  private JPanel  background;
+
+  // Die Arbeitsfläche, auf die Transitionen, Stellen und Kanten
+  // platziert werden
+  private GUI_DrawingArea drawing_area;
+
+  // Leiste am rechten Bildschirmrand, auf der sich Schaltflächen und
+  // Informationen befinden
+  private GUI_Sidebar right_sidebar;
+
+  // Statuszeile am unteren Rand des Simulators. Zum Anzeigen von
+  // Mitteilungen und Fehlern.
+  private GUI_Statebar down_statebar;
+
+  // Das Popup-Menü, das sich beim Rechtsklicken auf die drawing_area
+  // öffnet.
+  private GUI_PopupMenu popup_menu;
+
+  // Der Thread, der für die Hintergrundausführung der Funktion
+  // "Ausführen bis Verklemmung" benötigt wird.
+  transient Thread runUntilDeadlock;
   
   private void initUI()
   {
@@ -63,16 +84,24 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
      * View-Komponenten erzeugen
      */
     background = new JPanel();
-    drawing_area = new GUI_DrawingArea(model, this);  // benötigt model für Operationen damit und this, um Events hierher zu senden
-    right_sidebar = new GUI_Sidebar(this);        // benötigt this, um Events hierher zu senden
+
+    // benötigt `model` für Operationen damit und `this`, um Events
+    // hierher zu senden
+    drawing_area = new GUI_DrawingArea(model, this);
+
+    // benötigt this, um Events hierher zu senden
+    right_sidebar = new GUI_Sidebar(this);
     down_statebar = new GUI_Statebar();
 
-    // Farben einstellen
-    drawing_area.setBackground(new Color(50, 100, 200));  // Zeichenfeld: Blau
-    down_statebar.setBackground(new Color(255, 255, 255));  // Statusleiste: Weiß
+    // Farben einstellen: Zeichenfeld: Blau
+    drawing_area.setBackground(new Color(50, 100, 200));
+
+    // Statusleiste: Weiß
+    down_statebar.setBackground(new Color(255, 255, 255));
 
     /*
-     * Popup-Menü erzeugen, der drawing_area hinzufügen und entsprechenden MouseListener realisieren
+     * Popup-Menü erzeugen, der drawing_area hinzufügen und
+     * entsprechenden MouseListener realisieren
      */
     popup_menu = new GUI_PopupMenu(this);
     drawing_area.add(popup_menu);
@@ -81,7 +110,8 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     drawing_area.addMouseListener( new MouseAdapter()  { 
       public void mouseReleased( MouseEvent me ) {
 
-        // Popup-Menü nicht öffnen, wenn Thread für "Ausführen bis Verklemmung" gerade läuft
+        // Popup-Menü blockieren, wenn Thread für
+        // "Ausführen bis Verklemmung" gerade läuft
         if(runUntilDeadlock != null) {
           if(runUntilDeadlock.isAlive() == true) {
             return;
@@ -95,8 +125,9 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     } );
 
     // Ein Scrollpane erzeugen und die drawing_area da einbetten.
-    // Somit steht der drawing_area eine größere (scrollbare) Fläche zur Verfügung
-    // Hier zunächst: 4000 x 3000 Pixel
+    //
+    // Somit steht der drawing_area eine größere (scrollbare) Fläche zur
+    // Verfügung. Hier zunächst: 4000 x 3000 Pixel
     JScrollPane scrollpane = new JScrollPane(drawing_area);
     drawing_area.setPreferredSize(new Dimension(4000, 3000));
 
@@ -115,8 +146,9 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     repaint();
 
     /*
-     * Damit ist die Initialisierung beendet. Nun wird nur noch auf eintreffende Events
-     * gewartet, die in actionPerformed(...) ausgewertet und behandelt werden.
+     * Damit ist die Initialisierung beendet. Nun wird nur noch auf
+     * eintreffende Events gewartet, die in actionPerformed(...)
+     * ausgewertet und behandelt werden.
      */ 
   }
   
@@ -138,7 +170,9 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
   
   
   /*
-   * Hier erfolgt die Auswertung aller von den Komponenten erzeugten Events.
+   * Hier erfolgt die Auswertung aller von den Komponenten erzeugten
+   * Events.
+   * 
    * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
    */
   public void actionPerformed(ActionEvent e) {
@@ -226,97 +260,97 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     // Befehl "Eigenschaften"
     else if(e.getActionCommand() == "Properties") {
       // markiertes Element holen
-      elementGui = drawing_area.getMarkedElement();
+      selectedItem = drawing_area.getMarkedElement();
 
       // wenn kein Element markiert ist --> raus
-      if(elementGui == null) {
+      if(selectedItem == null) {
         down_statebar.setTextHighlighted("Properties: No item selected.");
         return;
       }
 
       // Wenn schon ein Fenster offen --> raus
-      if(windowPrprty != null || windowWeights != null) {
+      if(propertyWindow != null || weightsWindow != null) {
         down_statebar.setTextHighlighted("There's already a window open.");
         return;
       }
 
       // Wenn versucht wird, Eigenschaften für ein angeschlossenes Transition zu ändern --> raus
-      if(elementGui.getElementLogic().getElementType() == ME_ElementType.TRANSITION) {
-        if(elementGui.getElementLogic().isConnectedPartial() == true) {
+      if(selectedItem.getElementLogic().getElementType() == ME_ElementType.TRANSITION) {
+        if(selectedItem.getElementLogic().isConnectedPartial() == true) {
           down_statebar.setTextHighlighted("The properties of a transition cannot be changed when connected.");
           return;
         }
       }
 
       // nun Eigneschaften-Fenster öffnen
-      down_statebar.setText("Edit properties for " + elementGui.getElementLogic().getPIdentifiers()[0]);
-      windowPrprty = new GUI_WindowProperties(this, elementGui.getElementLogic().getPIdentifiers(), elementGui.getElementLogic().getProperties());
-      windowPrprty.setVisible(true);
+      down_statebar.setText("Edit properties for " + selectedItem.getElementLogic().getPIdentifiers()[0]);
+      propertyWindow = new GUI_WindowProperties(this, selectedItem.getElementLogic().getPIdentifiers(), selectedItem.getElementLogic().getProperties());
+      propertyWindow.setVisible(true);
 
     }
 
     // Abfrage des Buttons "OK" im Fenster "Eigenschaften"
     else if(e.getActionCommand() == "WinModOK") {
-      if(elementGui.getElementLogic().setProperties(windowPrprty.getProperties()) == true) {
-        windowPrprty.closeWindow();
-        windowPrprty = null;
-        down_statebar.setText("Editing properties for " + elementGui.getElementLogic().getPIdentifiers()[0] + " done.");       
+      if(selectedItem.getElementLogic().setProperties(propertyWindow.getProperties()) == true) {
+        propertyWindow.closeWindow();
+        propertyWindow = null;
+        down_statebar.setText("Editing properties for " + selectedItem.getElementLogic().getPIdentifiers()[0] + " done.");       
       }
       else {
-        JOptionPane.showMessageDialog(windowPrprty, "Cannot change properties!\nInvalid values entered?");
+        JOptionPane.showMessageDialog(propertyWindow, "Cannot change properties!\nInvalid values entered?");
       }
     }
 
     // Abfrage des Buttons "Abbrechen" im Fenster "Eigenschaften"
     else if(e.getActionCommand() == "WinModCANCEL") {
-      windowPrprty.closeWindow();
-      windowPrprty = null;
-      down_statebar.setText("Editing properties for " + elementGui.getElementLogic().getPIdentifiers()[0] + " cancelled.");
+      propertyWindow.closeWindow();
+      propertyWindow = null;
+      down_statebar.setText("Editing properties for " + selectedItem.getElementLogic().getPIdentifiers()[0] + " cancelled.");
     }
 
 
     // Befehl "Gewichte"
     else if(e.getActionCommand() == "Weights") {
       // markiertes Element holen
-      elementGui = drawing_area.getMarkedElement();
+      selectedItem = drawing_area.getMarkedElement();
 
       // wenn kein Element markiert ist --> raus
-      if(elementGui == null) {
+      if(selectedItem == null) {
         down_statebar.setTextHighlighted("Weights: no item selected.");
         return;
       }
 
       // Wenn schon ein Fenster offen --> raus
-      if(windowWeights != null || windowPrprty != null) {
+      if(weightsWindow != null || propertyWindow != null) {
         down_statebar.setTextHighlighted("There's already a window open.");
         return;
       }
 
       // Konstruktoraufruf
       else {
-        down_statebar.setText("Edit weights for " + elementGui.getElementLogic().getPIdentifiers()[0]);
-        windowWeights = new GUI_WindowWeights(this, elementGui.getElementLogic().getWIdentifiers(), elementGui.getElementLogic().getWeights());
-        windowWeights.setVisible(true);
+        down_statebar.setText("Edit weights for " + selectedItem.getElementLogic().getPIdentifiers()[0]);
+        weightsWindow = new GUI_WindowWeights(this, selectedItem.getElementLogic().getWIdentifiers(), selectedItem.getElementLogic().getWeights());
+        weightsWindow.setVisible(true);
       }
     }
 
     // Abfrage des Buttons "OK" im Fenster "Gewichte"
     else if(e.getActionCommand() == "WinWeightsOK") {
-      if(elementGui.getElementLogic().setWeights(windowWeights.getWeights()) == true) {
-        windowWeights.closeWindow();
-        windowWeights = null;
-        down_statebar.setText("Editing weights for " + elementGui.getElementLogic().getPIdentifiers()[0] + " done.");        
+      if(selectedItem.getElementLogic().setWeights(weightsWindow.getWeights()) == true) {
+        weightsWindow.closeWindow();
+        weightsWindow = null;
+        down_statebar.setText("Editing weights for " + selectedItem.getElementLogic().getPIdentifiers()[0] + " done.");        
       }
       else {
-        JOptionPane.showMessageDialog(windowPrprty, "Cannot change weights!\nInvalid values entered?");
+        JOptionPane.showMessageDialog(propertyWindow, "Cannot change weights!\nInvalid values entered?");
       }
     }
 
     // Abfrage des Buttons "Abbrechen" im Fenster "Gewichte"
     else if(e.getActionCommand() == "WinWeightsCANCEL") {
-      windowWeights.closeWindow();
-      windowWeights = null;
-      down_statebar.setText("Editing weights for " + elementGui.getElementLogic().getPIdentifiers()[0] + " cancelled.");
+      weightsWindow.closeWindow();
+      weightsWindow = null;
+      down_statebar.setText("Editing weights for " + selectedItem.getElementLogic().getPIdentifiers()[0] + " cancelled.");
     }
 
     /*
@@ -326,18 +360,18 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
 
     // Befehl "Entfernen"
     else if(e.getActionCommand() == "Remove") {
-      elementGui = drawing_area.getMarkedElement();
+      selectedItem = drawing_area.getMarkedElement();
 
-      if(elementGui == null) {
+      if(selectedItem == null) {
         // kein Element ausgewählt
         down_statebar.setText("To remove please select an item first.");
         return;
       }
 
-      if(elementGui.getElementLogic().isConnectedPartial() == false) {
+      if(selectedItem.getElementLogic().isConnectedPartial() == false) {
         // Element entfernen
-        model.deleteElement((M_ElementRoot)elementGui.getElementLogic());
-        drawing_area.deleteElement(elementGui);
+        model.deleteElement((M_ElementRoot)selectedItem.getElementLogic());
+        drawing_area.deleteElement(selectedItem);
       }
       else {
         down_statebar.setTextHighlighted("Can't remove a connected item.");
