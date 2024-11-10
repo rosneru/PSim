@@ -12,21 +12,22 @@ import model.*;
 import java.util.*;
 
 /**
- * Diese Klasse steuert die View. Sie realisiert das Erzeugen, Platzieren, Verschieben und Markieren der Elemente.
- * Außerdem ist sie für das Anschließen, also das Erzeugen von Kanten (Links) in der View verantwortlich.
- * Sie beobachtet (implements Observer) die Klasse Logik und erfährt so, ob in der Logik ein neues Element hinzugefügt
- * wurde und macht das dann auch in der View ( in update(...) ).
- * 
+ * Diese Klasse steuert die View. Sie realisiert das Erzeugen,
+ * Platzieren, Verschieben und Markieren der Elemente. Außerdem ist sie
+ * für das Anschließen, also das Erzeugen von Kanten (Links) in der View
+ * verantwortlich. Sie beobachtet (implements Observer) die Klasse Logik
+ * und erfährt so, ob in der Logik ein neues Element hinzugefügt wurde
+ * und macht das dann auch in der View ( in update(...) ).
+ *
  * @author Uwe Rosner
  *
  */
 public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotionListener, Observer {
-    static final long serialVersionUID = 1L;    // umgeht die Warnung "The
-                                                // serializable class ..."
-    // unterscheidet verschiedene Versionen der Klasse
+    static final long serialVersionUID = 1L;
 
-    private Logic model;    // Das Modell, Änderungen im Modell werden
-                            // beobachtet (siehe Member 'update')
+    // Das Modell, Änderungen im Modell werden beobachtet (siehe Member
+    // 'update')
+    private Logic model;
 
     private ArrayList<V_ElementRoot> elements = new ArrayList<V_ElementRoot>();
     private ArrayList<V_Link> links = new ArrayList<V_Link>();
@@ -41,10 +42,10 @@ public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotio
     private int mouseY;
 
     // zum Anschließen
-    private V_Pin sourcePin = null;                // Quell-Pin beim Anschließen
-    private V_Pin firstPin = null;                // erster Pin beim Anschließen
+    private V_Pin sourcePin = null;             // Quell-Pin beim Anschließen
+    private V_Pin firstPin = null;              // erster Pin beim Anschließen
     private VI_Element sourceElement = null;    // Quell-Element beim Anschließen
-    private V_Link linkInWork = null;            // Enthält während des Anschließens die neue (anzuschließende) Kante
+    private V_Link linkInWork = null;           // Enthält während des Anschließens die neue (anzuschließende) Kante
 
     // zum Hinzufügen neuer Elemente
     private V_ElementRoot elementInWork = null;    // Enthält das Element, das beim Erstellen "am Mauspfeil hängt"
@@ -53,8 +54,10 @@ public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotio
     private ActionListener act;
 
     /**
-     * Inintialisiert die View.
-     * @param model die Instanz der Klasse "Logik". Notwendig, um die Logik beaobachten zu können (wenn dort neue Elemente erstellt werden) 
+     * Initialisiert die View.
+     * @param model die Instanz der Klasse "Logik". Notwendig, um die
+     * Logik beobachten zu können (wenn dort neue Elemente erstellt
+     * werden) 
      * @param act
      */
     public GUI_DrawingArea(Logic model, ActionListener act) {
@@ -82,21 +85,23 @@ public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotio
     }
 
     /**
-     * Sperrt die Arbeitsfläche. Auf ihr kann fortan nicht mehr gearbeitet werden.
+     * Sperrt die Arbeitsfläche. Auf ihr kann fortan nicht mehr
+     * gearbeitet werden.
      */
     public void lockEditing() {
         editingLock = true;
     }
 
     /**
-     * Entsperrt die Arbeitsfläche. Auf ihr kann fortan wieder gearbeitet werden.
+     * Entsperrt die Arbeitsfläche.
      */
     public void unlockEditing() {
         editingLock = false;
     }
 
     /**
-     * Gibt dasjenige Element urück, das auf der Arbeitsfkäche gerade markiert ist.
+     * Gibt das auf der Arbeitsfläche markierte Element gerade
+     * markiert ist.
      * @return markiertes Element
      */
     public VI_Element getMarkedElement() {
@@ -111,7 +116,8 @@ public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotio
     }
 
     /**
-     * Diese Funktion wird immer aufgerufen, wenn GUI_DrawingArea.repaint() aufgerufen wird.
+     * Diese Funktion wird immer aufgerufen, wenn
+     * GUI_DrawingArea.repaint() aufgerufen wird.
      */
     public void paintComponent(Graphics g) {
         // Arbeitsfläche löschen
@@ -120,17 +126,20 @@ public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotio
         VI_Element d;
         VI_Link l;
 
-        for (int i = 0; i < elements.size(); i++) { // Alle Elemente nacheinander durchgehen...
-            d = (VI_Element) elements.get(i);         // ...und auswählen...
-            d.paintOn(g);                             // ...und zeichnen
+        // Alle Elemente zeichnen
+        for (int i = 0; i < elements.size(); i++) { 
+            d = (VI_Element) elements.get(i);
+            d.paintOn(g); 
         }
 
-        for (int i = 0; i < links.size(); i++) {    // Alle Links nacheinander durchgehen...
-            l = (V_Link) links.get(i);                 // ... auswählen ...
-            l.paintOn(g);                            // ... und zeichnen
+        // Alle Links (Kanten) zeichnen
+        for (int i = 0; i < links.size(); i++) {
+            l = (V_Link) links.get(i);
+            l.paintOn(g);
         }
 
-        // Auch das gerade zu erstellende Element (das "am Mauspfeil hängt") zeichnen
+        // Das gerade zu erstellende Element (das "am Mauspfeil hängt")
+        // zeichnen
         if (elementInWork != null) {
             elementInWork.setPosition(new Point(mouseX, mouseY));
             elementInWork.paintOn(g);
@@ -143,7 +152,8 @@ public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotio
     }
 
     /**
-     * Markiert das Element unter dem Mauspfeil zum Verschieben oder schließt Pins an (Kanten erstellen)
+     * Markiert das Element unter dem Mauspfeil zum Verschieben oder
+     * schließt Pins an (Kanten erstellen)
      */
     public void mousePressed(MouseEvent e) {
 
@@ -160,8 +170,8 @@ public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotio
 
         /*
          * Wenn ein neues Element am Mauspfeil "hängt" und die Maustaste
-         * gedrückt wurde, wird es nun in die Liste der Elemente aufgenommen und
-         * plaziert. Anschließend: Ausstieg.
+         * gedrückt wurde, wird es nun in die Liste der Elemente
+         * aufgenommen und platziert. Anschließend: Ausstieg.
          */
         if (elementInWork != null) {
             elementInWork.setColorNormal();
@@ -178,45 +188,51 @@ public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotio
         draggedElement = null; // alte Auswahl löschen
         VI_Element d;
         V_Pin highlight, destinationPin = null;
-        ArrayList list;
+        ArrayList pins;
 
         /*
-         * Die folgende Konstruktion ist sozusagen das Herz der View. Hier wird folgendes erledigt:
-         *   - Entscheidung, ob ein Element verschoben oder angeschlossen werden werden soll
-         *       (Maus nur über Element oder auch über Pin). Dann:
-         * 
-         *       Beim Verschieben: Setzen des Flags: zu verschiebendes Element wird in Variable draggedElement abgelegt.
-         *         Das eigentliche Verschieben erfolgt dann in Funktion mouseDragged().
+         * Das Herz der View. Aufgaben:
+         *   - Entscheidung, ob ein Element verschoben oder
+         *     angeschlossen werden werden soll (Maus nur über Element
+         *     oder auch über Pin). Dann:
          *
-         *       Beim Anschließen: Funktionalität bitte den beigefügten Kommentaren entnehmen.
-         *
-         *
-         * Zugegebenermaßen hat dieses Konstrukt noch einige Bearbeitung / Vereinfachung nötig.
+         *       - Beim Verschieben: Setzen des Flags: zu verschiebendes
+         *         Element wird in Variable draggedElement abgelegt. Das
+         *         eigentliche Verschieben erfolgt dann in Funktion
+         *         mouseDragged().
+         *       - Beim Anschließen: Funktionalität siehe Kommentare
          */
 
         // Verschieben oder Anschliessen?
-        for (int i = 0; i < elements.size(); i++) {    // Alle Elemente nacheinander durchgehen
-            d = (V_ElementRoot) elements.get(i);     // und auswählen
+        for (int i = 0; i < elements.size(); i++) {
+            d = (V_ElementRoot) elements.get(i);
 
             // Wenn in Element geklickt wurde:
             if (d.containsPoint(e.getPoint()) == true) {
-                clickedInElement = true;                // Markierung setzen
-                list = d.getAllPins();                    // Liste aller Pins von Element besorgen
-                for (int j = 0; j < list.size(); j++) {    // und pinweise durchlaufen
-                    highlight = (V_Pin) list.get(j);
+                clickedInElement = true;
+
+                // Alle Pins prüfen
+                pins = d.getAllPins();
+                for (int j = 0; j < pins.size(); j++) {
+                    highlight = (V_Pin) pins.get(j);
 
                     // Maus über Pin --> Anschließen
                     if (d.isPoint() == false && highlight.containsPoint(e.getPoint()) == true) {
                         // Wenn noch kein Link in Bearbeitung:
                         if (linkInWork == null) {
-                            // Falls Pin schon angeschlossen ist UND nur, wenn es eine Transition ist --> Abklemmen, zugehörigen Link löschen
-                            if (highlight.getAssociatedLogicPin().isConnected() == true && highlight.getAssociatedLogicPin().getAssignedElement().getElementType() == ME_ElementType.TRANSITION) {
+                            // Falls Pin schon angeschlossen ist UND
+                            // nur, wenn es eine Transition ist -->
+                            // Abklemmen, zugehörigen Link löschen
+                            if (highlight.getAssociatedLogicPin().isConnected() == true 
+                            && highlight.getAssociatedLogicPin()
+                                        .getAssignedElement()
+                                        .getElementType() == ME_ElementType.TRANSITION) {
 
                                 // Link im Modell löschen
                                 model.deleteLink(highlight.getAssociatedLogicPin().getAssignedLink(0));
                                 V_Link delLink = links.get(links.indexOf(highlight.getAssignedLink(0)));
 
-                                // Referencen des Links in den beiden
+                                // Referenzen des Links in den beiden
                                 // zugehörigen Pins in der View löschen
                                 ArrayList<V_Pin> allpins = highlight.getAssignedLink(0).getAllPins();
                                 for (int k = 0; k < allpins.size(); k++) {
@@ -373,11 +389,11 @@ public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotio
             // (2) Beim Anschließen: Erzeugen eines neuen Punktes (während Kantenerstellung)
             if (linkInWork != null) {
                 elements.add(new V_Point(e.getPoint().x, e.getPoint().y, linkInWork));
-                list = ((V_Point) elements.get(elements.size() - 1)).getAllPins();
-                destinationPin = (V_Pin) list.get(0);
+                pins = ((V_Point) elements.get(elements.size() - 1)).getAllPins();
+                destinationPin = (V_Pin) pins.get(0);
                 linkInWork.addPin(destinationPin);
-                sourcePin = (V_Pin) list.get(0);
-                highlight = (V_Pin) list.get(0);
+                sourcePin = (V_Pin) pins.get(0);
+                highlight = (V_Pin) pins.get(0);
             }
 
             // (3) Sonst: Wenn nahe einer Leitung geklickt wurde, einen Punkt hinzufügen
@@ -393,8 +409,8 @@ public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotio
                         elements.add(new V_Point(e.getPoint().x, e.getPoint().y, lnk));
 
                         // Zielpunkt besorgen
-                        list = ((V_Point) elements.get(elements.size() - 1)).getAllPins();    
-                        destinationPin = (V_Pin) list.get(0);
+                        pins = ((V_Point) elements.get(elements.size() - 1)).getAllPins();    
+                        destinationPin = (V_Pin) pins.get(0);
 
                         // Zielpunkt an entsprechende Position in Kante hinzufügen
                         lnk.addPin(destinationPin, position);
@@ -432,11 +448,12 @@ public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotio
     }
 
     /**
-     * Realisiert das Verschieben von Elementen.
-     * Bedingung: linke Maustaste muss über einem Element gedrückt werden und während des
-     * Verschiebens der Maus weiter gedrückt bleiben.
-     * Realisierung: Anwenden der Methode setPosition() auf das draggedElement (falls es existiert),
-     * dabei als neue Position  auf aktuelle Mausposition setzen.
+     * Realisiert das Verschieben von Elementen. Bedingung: linke
+     * Maustaste muss über einem Element gedrückt werden und während des
+     * Verschiebens der Maus weiter gedrückt bleiben. Realisierung:
+     * Anwenden der Methode setPosition() auf das draggedElement (falls
+     * es existiert), dabei als neue Position  auf aktuelle Mausposition
+     * setzen.
      */
     public void mouseDragged(MouseEvent e) {
 
@@ -509,9 +526,10 @@ public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotio
     }
 
     /**
-     * Diese Funktion wird aufgerufen, wenn im beobachteten Modell (Klasse: Logik) ein neues
-     * Element erzeugt wird. Sie sorgt dafür, dass das neue Element auch in der View dargestellt
-     * wird, und dass es zunächst "schattiert" am Mauspfeil klebt.
+     * Diese Funktion wird aufgerufen, wenn im beobachteten Modell
+     * (Klasse: Logik) ein neues Element erzeugt wird. Sie sorgt dafür,
+     * dass das neue Element auch in der View dargestellt wird, und dass
+     * es zunächst "schattiert" am Mauspfeil klebt.
      */
     public void update(Observable obs, Object obj) {
 
@@ -584,13 +602,17 @@ public class GUI_DrawingArea extends JPanel implements MouseListener, MouseMotio
      */
     public void loadElement(V_ElementRoot element) {
 
-        // Nur wenn es kein Punkt (--> V_Point) ist (Es bleiben also Transitionen und Stellen übrig).
-        // Punkte müssen rausgefiltert werden, weil unten (im inneren if()-Zweig) auf element.getElementLogic()
-        // zugegriffen wird; das ist für Elemente vom Typ V_Point nicht definiert und würde zu einer
+        // Nur wenn es kein Punkt (--> V_Point) ist (Es bleiben also
+        // Transitionen und Stellen übrig). Punkte werden übersprungen,
+        // weil später (im inneren if()-Zweig) auf
+        // element.getElementLogic() zugegriffen wird; das ist für
+        // Elemente vom Typ V_Point nicht definiert und würde zu einer
         // NullPointerException führen.
         if(element.isPoint() == false) {
-            // Und nur wenn es eine Transition ist: Diese muss nach dem Landen noch den ActionListener zugewiesen bekommen
-            // (den braucht sie für das Aufblinken-Lassen bei erfolgreicher Berechnung zum repaint()
+            // Und nur wenn es eine Transition ist: Diese muss nach dem
+            // Landen noch den ActionListener zugewiesen bekommen (den
+            // braucht sie für das Aufblinken-Lassen bei erfolgreicher
+            // Berechnung zum repaint()
             if(element.getElementLogic().getElementType() == ME_ElementType.TRANSITION) {
                 ( (V_PNTransition)element ).setActionListener(act);
             }

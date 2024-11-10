@@ -6,23 +6,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Debug (Attach)",
-            "request": "attach",
-            "hostName": "localhost",
-            "port": "<debug port of the debuggee>"
-        },
-        {
-            "type": "java",
-            "name": "Debug (Launch) - Current File",
+            "name": "Launch PSim",
             "request": "launch",
-            "mainClass": "${file}"
+            "mainClass": "control.StartUpApp"
         },
-        {
-            "type": "java",
-            "name": "Debug (Launch)-StartUpApp<02-PSim>",
-            "request": "launch",
-            "mainClass": "control.StartUpApp",
-            "projectName": "02-PSim"
-        }
     ]
 }
