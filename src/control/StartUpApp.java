@@ -35,19 +35,19 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
 
   // Die Arbeitsfläche, auf die Transitionen, Stellen und Kanten
   // platziert werden
-  private GUI_DrawingArea drawing_area;
+  private GUI_DrawingArea drawingArea;
 
   // Leiste am rechten Bildschirmrand, auf der sich Schaltflächen und
   // Informationen befinden
-  private GUI_Sidebar right_sidebar;
+  private GUI_Sidebar controlPanel;
 
   // Statuszeile am unteren Rand des Simulators. Zum Anzeigen von
   // Mitteilungen und Fehlern.
-  private GUI_Statebar down_statebar;
+  private GUI_Statebar stateBar;
 
   // Das Popup-Menü, das sich beim Rechtsklicken auf die drawing_area
   // öffnet.
-  private GUI_PopupMenu popup_menu;
+  private GUI_PopupMenu popupMenu;
 
   // Der Thread, der für die Hintergrundausführung der Funktion
   // "Ausführen bis Verklemmung" benötigt wird.
@@ -87,27 +87,27 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
 
     // benötigt `model` für Operationen damit und `this`, um Events
     // hierher zu senden
-    drawing_area = new GUI_DrawingArea(model, this);
+    drawingArea = new GUI_DrawingArea(model, this);
 
     // benötigt this, um Events hierher zu senden
-    right_sidebar = new GUI_Sidebar(this);
-    down_statebar = new GUI_Statebar();
+    controlPanel = new GUI_Sidebar(this);
+    stateBar = new GUI_Statebar();
 
     // Farben einstellen: Zeichenfeld: Blau
-    drawing_area.setBackground(new Color(50, 100, 200));
+    drawingArea.setBackground(new Color(50, 100, 200));
 
     // Statusleiste: Weiß
-    down_statebar.setBackground(new Color(255, 255, 255));
+    stateBar.setBackground(new Color(255, 255, 255));
 
     /*
      * Popup-Menü erzeugen, der drawing_area hinzufügen und
      * entsprechenden MouseListener realisieren
      */
-    popup_menu = new GUI_PopupMenu(this);
-    drawing_area.add(popup_menu);
+    popupMenu = new GUI_PopupMenu(this);
+    drawingArea.add(popupMenu);
 
     // MouseListener für Popup-Menü realisieren
-    drawing_area.addMouseListener( new MouseAdapter()  { 
+    drawingArea.addMouseListener( new MouseAdapter()  { 
       public void mouseReleased( MouseEvent me ) {
 
         // Popup-Menü blockieren, wenn Thread für
@@ -120,7 +120,7 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
 
         // Popup-Menü öffnen
         if ( me.isPopupTrigger() ) 
-          popup_menu.show( me.getComponent(), me.getX(), me.getY() );
+          popupMenu.show( me.getComponent(), me.getX(), me.getY() );
       }
     } );
 
@@ -128,16 +128,16 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     //
     // Somit steht der drawing_area eine größere (scrollbare) Fläche zur
     // Verfügung. Hier zunächst: 4000 x 3000 Pixel
-    JScrollPane scrollpane = new JScrollPane(drawing_area);
-    drawing_area.setPreferredSize(new Dimension(4000, 3000));
+    JScrollPane scrollPane = new JScrollPane(drawingArea);
+    drawingArea.setPreferredSize(new Dimension(4000, 3000));
 
     // Layout-Manager für den Hintergrund wählen
     background.setLayout(new BorderLayout());
     
     // Dem Hintergrund an die entsprechenden Stellen die Komponenten hinzufügen
-    background.add(scrollpane, BorderLayout.CENTER);
-    background.add(right_sidebar, BorderLayout.EAST);
-    background.add(down_statebar, BorderLayout.SOUTH);
+    background.add(scrollPane, BorderLayout.CENTER);
+    background.add(controlPanel, BorderLayout.EAST);
+    background.add(stateBar, BorderLayout.SOUTH);
 
     // Dem Applet den Hintergrund hinzufügen und darstellen
     getContentPane().add(background);
@@ -181,7 +181,7 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     // Anweisung "repaint" abfragen
     // Quelle: V_PNTransition
     if(e.getActionCommand() == "Stmt_Repaint") {
-      drawing_area.repaint();
+      drawingArea.repaint();
     }
 
     // Keine weiteren Aktionen zulassen, solange der Thread für
@@ -199,59 +199,59 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     // Mitteilung "Msg_Connect_OK" abfragen
     // Quelle: GUI_DrawingArea
     if(e.getActionCommand() == "Msg_Connect_OK") {
-      down_statebar.setText("Pins connected.");
+      stateBar.setText("Pins connected.");
     }
 
     // Fehler "Error_Connect_SrcPinIsAInputPin" abfragen
     // Quelle: GUI_DrawingArea
     else if(e.getActionCommand() == "Error_Connect_SrcPinIsAInputPin") {
-      down_statebar.setTextHighlighted("Connecting must start with an output pin.");
+      stateBar.setTextHighlighted("Connecting must start with an output pin.");
     }
 
     // Fehler "Error_Connect_DstPinIsAOutputPin" abfragen
     // Quelle: GUI_DrawingArea
     else if(e.getActionCommand() == "Error_Connect_DstPinIsAOutputPin") {
-      down_statebar.setTextHighlighted("The connection must end with an input pin.");
+      stateBar.setTextHighlighted("The connection must end with an input pin.");
     }
 
     // Mitteilung "MSG_Deleted_Transition" abfragen
     // Quelle: Logic
     else if(e.getActionCommand() == "Msg_Deleted_Transition") {
-      down_statebar.setText("Removed a transition.");
+      stateBar.setText("Removed a transition.");
     }
 
     // Mitteilung "MSG_Deleted_PlaceStorage" abfragen
     // Quelle: Logic
     else if(e.getActionCommand() == "Msg_Deleted_PlaceStorage") {
-      down_statebar.setText("Removed a place (gen.).");
+      stateBar.setText("Removed a place (gen.).");
     }
 
     // Mitteilung "MSG_Deleted_PlaceStorage" abfragen
     // Quelle: Logic
     else if(e.getActionCommand() == "Msg_Deleted_PlaceInput") {
-      down_statebar.setText("Removed a input place.");
+      stateBar.setText("Removed a input place.");
     }
 
     // Mitteilung "MSG_Deleted_PlaceStorage" abfragen
     // Quelle: Logic
     else if(e.getActionCommand() == "Msg_Deleted_PlaceOutput") {
-      down_statebar.setText("Removed a output place.");
+      stateBar.setText("Removed a output place.");
     }
 
     // Fehler "Error_PlaceNoTransition" abfragen
     // Quelle: Logic
     else if(e.getActionCommand() == "Error_Connect_PlaceNoTransition") {
-      down_statebar.setTextHighlighted("A place must be followed by a transition.");
+      stateBar.setTextHighlighted("A place must be followed by a transition.");
     }
 
     // Fehler "Error_TransitionNoPlace" abfragen
     // Quelle: Logic
     else if(e.getActionCommand() == "Error_Connect_TransitionNoPlace") {
-      down_statebar.setTextHighlighted("A transition must be followed by a place.");
+      stateBar.setTextHighlighted("A transition must be followed by a place.");
     }
 
     else if(e.getActionCommand() == "Error_Connect_DstPinAlreadyConnected") {
-      down_statebar.setTextHighlighted("Only one arc may be connected to an input of a transition.");
+      stateBar.setTextHighlighted("Only one arc may be connected to an input of a transition.");
     }
 
     /*
@@ -262,30 +262,30 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     // Befehl "Eigenschaften"
     else if(e.getActionCommand() == "Properties") {
       // markiertes Element holen
-      selectedItem = drawing_area.getMarkedElement();
+      selectedItem = drawingArea.getMarkedElement();
 
       // wenn kein Element markiert ist --> raus
       if(selectedItem == null) {
-        down_statebar.setTextHighlighted("Properties: No item selected.");
+        stateBar.setTextHighlighted("Properties: No item selected.");
         return;
       }
 
       // Wenn schon ein Fenster offen --> raus
       if(propertyWindow != null || weightsWindow != null) {
-        down_statebar.setTextHighlighted("There's already a window open.");
+        stateBar.setTextHighlighted("There's already a window open.");
         return;
       }
 
       // Wenn versucht wird, Eigenschaften für ein angeschlossenes Transition zu ändern --> raus
       if(selectedItem.getElementLogic().getElementType() == ME_ElementType.TRANSITION) {
         if(selectedItem.getElementLogic().isConnectedPartial() == true) {
-          down_statebar.setTextHighlighted("The properties of a transition cannot be changed when connected.");
+          stateBar.setTextHighlighted("The properties of a transition cannot be changed when connected.");
           return;
         }
       }
 
       // nun Eigenschaften-Fenster öffnen
-      down_statebar.setText("Edit properties for " + selectedItem.getElementLogic().getPIdentifiers()[0]);
+      stateBar.setText("Edit properties for " + selectedItem.getElementLogic().getPIdentifiers()[0]);
       propertyWindow = new GUI_WindowProperties(this, selectedItem.getElementLogic().getPIdentifiers(), selectedItem.getElementLogic().getProperties());
       propertyWindow.setVisible(true);
 
@@ -296,7 +296,7 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
       if(selectedItem.getElementLogic().setProperties(propertyWindow.getProperties()) == true) {
         propertyWindow.closeWindow();
         propertyWindow = null;
-        down_statebar.setText("Editing properties for " + selectedItem.getElementLogic().getPIdentifiers()[0] + " done.");       
+        stateBar.setText("Editing properties for " + selectedItem.getElementLogic().getPIdentifiers()[0] + " done.");       
       }
       else {
         JOptionPane.showMessageDialog(propertyWindow, "Cannot change properties!\nInvalid values entered?");
@@ -307,30 +307,30 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     else if(e.getActionCommand() == "WinModCANCEL") {
       propertyWindow.closeWindow();
       propertyWindow = null;
-      down_statebar.setText("Editing properties for " + selectedItem.getElementLogic().getPIdentifiers()[0] + " cancelled.");
+      stateBar.setText("Editing properties for " + selectedItem.getElementLogic().getPIdentifiers()[0] + " cancelled.");
     }
 
 
     // Befehl "Gewichte"
     else if(e.getActionCommand() == "Weights") {
       // markiertes Element holen
-      selectedItem = drawing_area.getMarkedElement();
+      selectedItem = drawingArea.getMarkedElement();
 
       // wenn kein Element markiert ist --> raus
       if(selectedItem == null) {
-        down_statebar.setTextHighlighted("Weights: no item selected.");
+        stateBar.setTextHighlighted("Weights: no item selected.");
         return;
       }
 
       // Wenn schon ein Fenster offen --> raus
       if(weightsWindow != null || propertyWindow != null) {
-        down_statebar.setTextHighlighted("There's already a window open.");
+        stateBar.setTextHighlighted("There's already a window open.");
         return;
       }
 
       // Konstruktoraufruf
       else {
-        down_statebar.setText("Edit weights for " + selectedItem.getElementLogic().getPIdentifiers()[0]);
+        stateBar.setText("Edit weights for " + selectedItem.getElementLogic().getPIdentifiers()[0]);
         weightsWindow = new GUI_WindowWeights(this, selectedItem.getElementLogic().getWIdentifiers(), selectedItem.getElementLogic().getWeights());
         weightsWindow.setVisible(true);
       }
@@ -341,7 +341,7 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
       if(selectedItem.getElementLogic().setWeights(weightsWindow.getWeights()) == true) {
         weightsWindow.closeWindow();
         weightsWindow = null;
-        down_statebar.setText("Editing weights for " + selectedItem.getElementLogic().getPIdentifiers()[0] + " done.");        
+        stateBar.setText("Editing weights for " + selectedItem.getElementLogic().getPIdentifiers()[0] + " done.");        
       }
       else {
         JOptionPane.showMessageDialog(propertyWindow, "Cannot change weights!\nInvalid values entered?");
@@ -352,7 +352,7 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     else if(e.getActionCommand() == "WinWeightsCANCEL") {
       weightsWindow.closeWindow();
       weightsWindow = null;
-      down_statebar.setText("Editing weights for " + selectedItem.getElementLogic().getPIdentifiers()[0] + " cancelled.");
+      stateBar.setText("Editing weights for " + selectedItem.getElementLogic().getPIdentifiers()[0] + " cancelled.");
     }
 
     /*
@@ -362,27 +362,27 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
 
     // Befehl "Entfernen"
     else if(e.getActionCommand() == "Remove") {
-      selectedItem = drawing_area.getMarkedElement();
+      selectedItem = drawingArea.getMarkedElement();
 
       if(selectedItem == null) {
         // kein Element ausgewählt
-        down_statebar.setText("To remove please select an item first.");
+        stateBar.setText("To remove please select an item first.");
         return;
       }
 
       if(selectedItem.getElementLogic().isConnectedPartial() == false) {
         // Element entfernen
         model.deleteElement((M_ElementRoot)selectedItem.getElementLogic());
-        drawing_area.deleteElement(selectedItem);
+        drawingArea.deleteElement(selectedItem);
       }
       else {
-        down_statebar.setTextHighlighted("Can't remove a connected item.");
+        stateBar.setTextHighlighted("Can't remove a connected item.");
       }
     }
 
     // Befehl "Vollständig Abklemmen"
     else if(e.getActionCommand() == "Disconnect completely") {
-      down_statebar.setText("Disconnect completely: No implemented, yet.");
+      stateBar.setText("Disconnect completely: No implemented, yet.");
     }
 
     // Befehl "..."
@@ -400,11 +400,11 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
       }
 
       // Alles zurücksetzen
-      drawing_area.clear();
+      drawingArea.clear();
       model.clear();
       model.reset();
-      right_sidebar.setSteps(model.getStepCount());
-      drawing_area.repaint();
+      controlPanel.setSteps(model.getStepCount());
+      drawingArea.repaint();
       
     }
 
@@ -417,20 +417,20 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
       }
 
       if(loadPetrinet() == true) {
-        down_statebar.setText("Petri net loaded successfully.");
+        stateBar.setText("Petri net loaded successfully.");
       }
       else {
-        down_statebar.setTextHighlighted("Petri net not loaded.");
+        stateBar.setTextHighlighted("Petri net not loaded.");
       }
     }
 
     // Befehl "Speichern"
     else if(e.getActionCommand() == "Save") {
       if(savePetrinet() == true) {
-        down_statebar.setText("Petri net saved successfully.");
+        stateBar.setText("Petri net saved successfully.");
       }
       else {
-        down_statebar.setTextHighlighted("Petri net not saved.");
+        stateBar.setTextHighlighted("Petri net not saved.");
       }
     }
 
@@ -438,15 +438,15 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     else if(e.getActionCommand() == "Single step") {
       if(model.isNetConsistent() == true) {
         if(model.makeStep() == true) {
-          right_sidebar.setSteps(model.getStepCount());
-          down_statebar.setText("Step done");
+          controlPanel.setSteps(model.getStepCount());
+          stateBar.setText("Step done");
         }
         else {
-          down_statebar.setTextHighlighted("Step *not* done; no transition could work.");
+          stateBar.setTextHighlighted("Step *not* done; no transition could work.");
         }
       }
       else {
-        down_statebar.setTextHighlighted("Can't start running; net isn't consistent.");
+        stateBar.setTextHighlighted("Can't start running; net isn't consistent.");
       }
     }
 
@@ -459,30 +459,30 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     // Befehl "Reset"
     else if(e.getActionCommand() == "Reset") {
       model.reset();
-      right_sidebar.setSteps(model.getStepCount());
-      down_statebar.setText("Net reset.");
-      drawing_area.repaint();
+      controlPanel.setSteps(model.getStepCount());
+      stateBar.setText("Net reset.");
+      drawingArea.repaint();
     }
 
     // Befehle zum Hinzufügen der Elemente
     else if(e.getActionCommand() == "Input place") {
       model.addPlaceInput();
-      down_statebar.setText("Input place created.");
+      stateBar.setText("Input place created.");
     }
     else if(e.getActionCommand() == "Output place") {
       model.addPlaceOutput();
-      down_statebar.setText("Output place created");
+      stateBar.setText("Output place created");
     }
     else if(e.getActionCommand() == "Place (gen.)") {
       model.addPlaceStorage();
-      down_statebar.setText("Place (gen.) created.");
+      stateBar.setText("Place (gen.) created.");
     }
     else if(e.getActionCommand() == "Transition") {
       model.addTransition();
-      down_statebar.setText("Transition created.");
+      stateBar.setText("Transition created.");
     }
 
-    drawing_area.repaint();
+    drawingArea.repaint();
   }
 
   /*
@@ -492,7 +492,7 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
    */
   private boolean continueQuestion(String title) {
     // Wenn brereits ein Netz existiert
-    if(drawing_area.getElements().size() > 0) {
+    if(drawingArea.getElements().size() > 0) {
       // Sicherheitsabfrage
       if(JOptionPane.showConfirmDialog(
           this,
@@ -545,8 +545,8 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
       ArrayList<MI_Element> logicElementsPlacesOutput = model.getElementsOutput();
       ArrayList<M_Link> logicLinks = model.getLinks();
 
-      ArrayList<V_Link> viewLinks = drawing_area.getLinks();
-      ArrayList<V_ElementRoot> viewElements = drawing_area.getElements();
+      ArrayList<V_Link> viewLinks = drawingArea.getLinks();
+      ArrayList<V_ElementRoot> viewElements = drawingArea.getElements();
 
       /*
        * Logik speichern
@@ -624,7 +624,7 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     /*
      * altes Netz löschen
      */
-    drawing_area.clear();
+    drawingArea.clear();
     model.clear();
 
     /*
@@ -709,21 +709,21 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
       for(int i = 0; i < size; i++) {
         viewElement = (V_ElementRoot)oin.readObject();
         viewElement.reloadObverver();
-        drawing_area.loadElement(viewElement);
+        drawingArea.loadElement(viewElement);
       }
 
       // Kanten
       size = oin.readInt();
       for(int i = 0; i < size; i++) {
         viewLink = (V_Link)oin.readObject();
-        drawing_area.loadLink(viewLink);
+        drawingArea.loadLink(viewLink);
       }
 
       oin.close();
       fin.close();
 
-      right_sidebar.setSteps(model.getStepCount());
-      drawing_area.repaint();
+      controlPanel.setSteps(model.getStepCount());
+      drawingArea.repaint();
 
       return true;
     }
@@ -741,11 +741,11 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
     if(model.isNetConsistent() == true) {
 
       // drawing_area für Bearbeitung sperren
-      drawing_area.lockEditing();
+      drawingArea.lockEditing();
 
       do {
         model.makeStep();
-        right_sidebar.setSteps(model.getStepCount());
+        controlPanel.setSteps(model.getStepCount());
         try {
           Thread.sleep(120);
         }
@@ -756,12 +756,12 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
       while(model.hasAtLeastOneTransitionWorked() == true);
 
       // Bearbeitung für drawing_area wieder erlauben
-      drawing_area.unlockEditing();
+      drawingArea.unlockEditing();
 
-      down_statebar.setText("Run until deadlock. Currently no transition can work.");
+      stateBar.setText("Run until deadlock. Currently no transition can work.");
     }
     else {
-      down_statebar.setTextHighlighted("Run failed; net isn't consistent.");
+      stateBar.setTextHighlighted("Run failed; net isn't consistent.");
     }
   }
 }
