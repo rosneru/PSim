@@ -4,8 +4,8 @@ import javax.swing.border.*;
 import java.awt.event.*;
 
 /**
- * Stellt einen rechten Seitenbereich mit Schaltflächen (zum Bearbeiten und
- * zur Simaulation) und einem Schrittzähler zur Verfügung.
+ * Stellt einen rechten Seitenbereich mit Schaltflächen (zum Bearbeiten
+ * und zur Simulation) und einem Schrittzähler zur Verfügung.
  * @author Uwe Rosner
  *
  */
@@ -16,14 +16,15 @@ public class GUI_Sidebar extends Box{
     JPanel p1;        // Panel für die Schaltflächen zum Bearbeiten
     JPanel p2;        // Panel für die Schaltflächen zur Simulation
 
-    JButton[] edtButt;    // Schalflächen-Feld für die Befehle zum Bearbeiten
-    JButton[] simButt;    // Schalflächen-Feld für die Befehle zur Simulation
+    JButton[] edtButt;    // Schaltflächen-Feld für die Befehle zum Bearbeiten
+    JButton[] simButt;    // Schaltflächen-Feld für die Befehle zur Simulation
 
     JLabel stepcount;    // für die Anzeige des Schrittzählers
 
     /**
      * Konstruktor des rechten Seitenbereichs.
-     * @param act Der ActionListener, an den die Events (auf bestimmte Schaltfläche geklickt) gesendet werden.
+     * @param act Der ActionListener, an den die Events (auf bestimmte
+     * Schaltfläche geklickt) gesendet werden.
      */
     public GUI_Sidebar(ActionListener act) {
         // Grundsätzliche layout-Einstellungen
@@ -59,7 +60,10 @@ public class GUI_Sidebar extends Box{
         // Bearbeiten-Panel erzeugen
         p1 = new JPanel();
         p1.setLayout(new BoxLayout(p1, BoxLayout.Y_AXIS));
-        p1.setBorder(new TitledBorder(etchedBorder, "Edit", 0, TitledBorder.CENTER));
+        p1.setBorder(new TitledBorder(etchedBorder,
+                                      "Edit", 
+                                      0,
+                                      TitledBorder.CENTER));
         for(int i = 0; i < edtButt.length; i++) {
             p1.add(edtButt[i]);
             p1.add(createVerticalStrut(8));
@@ -68,7 +72,10 @@ public class GUI_Sidebar extends Box{
         // Simulation-Panel erzeugen
         p2 = new JPanel();
         p2.setLayout(new BoxLayout(p2, BoxLayout.Y_AXIS));
-        p2.setBorder(new TitledBorder(etchedBorder, "Simulating", 0, TitledBorder.CENTER));
+        p2.setBorder(new TitledBorder(etchedBorder,
+                                      "Simulating",
+                                      0,
+                                      TitledBorder.CENTER));
         for(int i = 0; i < (simButt.length - 1); i++) {
             p2.add(simButt[i]);
             p2.add(createVerticalStrut(8));

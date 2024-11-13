@@ -28,7 +28,7 @@ This very version has been tested with:
 With this set up, it should be running into a debugging session by 
 hitting F5 in VSCode, happily.
 
-### Fix launching errors
+### Fix launch errors
 
 When launching the app from VSCode there is a chance the following error
 appears: *Could not find or load main class*

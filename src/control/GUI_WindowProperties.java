@@ -5,11 +5,12 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
- * Diese Klasse stellt ein Fenster zum Eingeben von Eigenschaften zur Verfügung.
- * Dabei wird je nach verwendetem Konstruktor ein Fenster präsentiert, das entweder
- * die numerische Eingabe der mit Bezeichnern versehenen Eigenschaften erlaubt oder
- * das die Auswahl einer bestimmten Eigenschaft per RadioButton anbietet. Näheres dazu
- * in der Beschreibung der entsprechenden Konstruktoren.
+ * Diese Klasse stellt ein Fenster zum Eingeben von Eigenschaften zur
+ * Verfügung. Dabei wird je nach verwendetem Konstruktor ein Fenster
+ * präsentiert, das entweder die numerische Eingabe der mit Bezeichnern
+ * versehenen Eigenschaften erlaubt oder das die Auswahl einer
+ * bestimmten Eigenschaft per RadioButton anbietet. Näheres dazu in der
+ * Beschreibung der entsprechenden Konstruktoren.
  * @author Uwe Rosner
  *
  */
@@ -27,11 +28,15 @@ public class GUI_WindowProperties extends JFrame {
     private JPanel panel = new JPanel();                    // Das Panel, auf dem das alles platziert wird
 
     /**
-     * Konstruktor, zum Bereitstellen eines Eigenschaften-Fensters zur numerischen Eingabe der Eigenschaften.
-     * @param act ActionListener an den die Events der Schaltflächen "OK" und "Abbrechen" gesendet werden
-     * @param identifiers Die Bezeichnungen der Eigenschaften. <B>Wichtig:</B> Der erste Identifier sollte
-     * den Namen des Elements enthalten, für das die Eigensachaften angezeigt werden, denn als solcher wird
-     * er in der Titeleiste des Fensters angezeigt. 
+     * Konstruktor, zum Bereitstellen eines Eigenschaften-Fensters zur
+     * numerischen Eingabe der Eigenschaften.
+     * @param act ActionListener an den die Events der Schaltflächen
+     * "OK" und "Abbrechen" gesendet werden
+     * @param identifiers Die Bezeichnungen der Eigenschaften.
+     * <B>Wichtig:</B> Der erste Identifier sollte den Namen des
+     * Elements enthalten, für das die Eigenschaften angezeigt werden,
+     * denn als solcher wird er in der Titelleiste des Fensters
+     * angezeigt. 
      * @param properties Die Eigenschaften.
      */
     public GUI_WindowProperties(ActionListener act, String[] identifiers, String[] properties) {
@@ -95,16 +100,23 @@ public class GUI_WindowProperties extends JFrame {
     }
 
     /**
-     * Konstruktor, zum Bereitstellen eines Eigenschaften-Fensters zur Auswahl einer Eigenschaft aus
-     * einer übergebenen Menge von Optionen.
-     * @param act ActionListener an den die Events der Schaltflächen "OK" und "Abbrechen" gesendet werden
-     * @param identifiers Die Bezeichnungen der Eigenschaften. <B>Wichtig:</B> Der erste Identifier sollte
-     * den Namen des Elements enthalten, für das die Eigensachaften angezeigt werden, denn als solcher wird
-     * er in der Titeleiste des Fensters angezeigt.
+     * Konstruktor, zum Bereitstellen eines Eigenschaften-Fensters zur
+     * Auswahl einer Eigenschaft aus einer übergebenen Menge von
+     * Optionen.
+     * @param act ActionListener an den die Events der Schaltflächen
+     * "OK" und "Abbrechen" gesendet werden
+     * @param identifiers Die Bezeichnungen der Eigenschaften.
+     * <B>Wichtig:</B> Der erste Identifier sollte den Namen des
+     * Elements enthalten, für das die Eigenschaften angezeigt werden,
+     * denn als solcher wird er in der Titelleiste des Fensters
+     * angezeigt.
      * @param property Die aktuell gewählte Eigenschaft
      * @param options Die zur Verfügung stehenden Eigenschaften
      */
-    public GUI_WindowProperties(ActionListener act, String[] identifiers, String property, String[] options) {
+    public GUI_WindowProperties(ActionListener act,
+                                String[] identifiers,
+                                String property,
+                                String[] options) {
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
         this.setMinimumSize(new Dimension(480, 50));
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -164,9 +176,9 @@ public class GUI_WindowProperties extends JFrame {
     }
 
     /**
-     * Liest die im Eigenschaftenfenster einegebenen / eingestellten Eigenschaften aus
-     * und gibt diese zurück.
-     * @return Die eingegebenen / eingestellten Eigenschaften
+     * Liest die im Eigenschaftsfenster eingestellten Eigenschaften aus
+     * und gibt sie zurück.
+     * @return Die eingestellten Eigenschaften
      */
     public String[] getProperties() {
 
@@ -176,9 +188,9 @@ public class GUI_WindowProperties extends JFrame {
             return selected;
         }
         else {
-            // die Werte in allen Textfeldern in einem String-Array zurückgeben
-    
-            if(textFields == null) {    // Wenn Element keine änderbaren Eigenschaften besitzt
+            // die Werte in allen Textfeldern in einem String-Array
+            // zurückgeben
+                if(textFields == null) {    // Wenn Element keine änderbaren Eigenschaften besitzt
                 return null;            // gib leeres String-Array zurück
             }
     

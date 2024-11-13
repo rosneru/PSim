@@ -169,11 +169,12 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
   }
   
   
-  /*
+  /**
    * Hier erfolgt die Auswertung aller von den Komponenten erzeugten
    * Events.
    * 
-   * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+   * @see 
+   * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
    */
   public void actionPerformed(ActionEvent e) {
 
@@ -183,7 +184,8 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
       drawing_area.repaint();
     }
 
-    // Keine weiteren Aktionen zulassen, solange der Thread für "Ausführen bis Verklemmung" gerade läuft
+    // Keine weiteren Aktionen zulassen, solange der Thread für
+    // "Ausführen bis Verklemmung" gerade läuft
     if(runUntilDeadlock != null) {
       if(runUntilDeadlock.isAlive() == true) {
         return;
@@ -282,7 +284,7 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
         }
       }
 
-      // nun Eigneschaften-Fenster öffnen
+      // nun Eigenschaften-Fenster öffnen
       down_statebar.setText("Edit properties for " + selectedItem.getElementLogic().getPIdentifiers()[0]);
       propertyWindow = new GUI_WindowProperties(this, selectedItem.getElementLogic().getPIdentifiers(), selectedItem.getElementLogic().getProperties());
       propertyWindow.setVisible(true);
@@ -588,7 +590,8 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
       for(int i = 0; i < viewElements.size(); i++) {
         V_ElementRoot viewItem = viewElements.get(i); 
         
-        // eventuell markiertes oder verklemmtes Element wieder in Normalzustand versetzen
+        // eventuell markiertes oder verklemmtes Element wieder in
+        // Normalzustand versetzen
         viewItem.setColorNormal();
         
         
@@ -731,8 +734,8 @@ public class StartUpApp extends JFrame  implements ActionListener, Runnable
   }
 
   /**
-   * Wird beim Aufruf des Threads ausgeführt.
-   * Enthält den Code der Funktion "Ausführen bis Verklemmung", die nicht blockieren darf.
+   * Wird beim Aufruf des Threads ausgeführt. Enthält den Code der
+   * Funktion "Ausführen bis Verklemmung", die nicht blockieren darf.
    */
   public void run() {
     if(model.isNetConsistent() == true) {

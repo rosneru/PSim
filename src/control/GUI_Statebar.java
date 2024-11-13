@@ -4,8 +4,9 @@ import javax.swing.border.*;
 import java.awt.*;
 
 /**
- * Diese Klasse stellt eine Statuszeile zur Verfügung, die beim Petrinet-Simulatot am unteren
- * Bildschirmrand positioniert wird. Sie ermöglicht wahlweise die Ausgabe von normalem Text (Farbe schwarz)
+ * Diese Klasse stellt eine Statuszeile zur Verfügung, die beim
+ * Petrinet-Simulatot am unteren Bildschirmrand positioniert wird. Sie
+ * ermöglicht wahlweise die Ausgabe von normalem Text (Farbe schwarz)
  * oder hervorgehobenem Text (Farbe rot)
  * @author Uwe Rosner
  *
@@ -18,7 +19,7 @@ public class GUI_Statebar extends JPanel {
     JLabel    label;    //    Das Label für den anzuzeigenden Text
 
     /**
-     * Das ist der Konstrunktor der Statusleiste.
+     * Das ist der Konstruktor der Statusleiste.
      */
     public GUI_Statebar() {
         // Statusleiste bauen und initialisieren

@@ -20,7 +20,8 @@ import model.M_Pin;
 
 
 /**
- * Klasse für die zentrale Logikverwaltung. Hier werden dem Netz Elemente, Kanten und Pins hinzugefügt (oder geladen) und
+ * Klasse für die zentrale Logikverwaltung. Hier werden dem Netz
+ * Elemente, Kanten und Pins hinzugefügt (oder geladen) und
  * Tests durchgeführt. Weiterhin steht mit der Methode makeStep() das Ausführen des Netzes im Mittelpunkt. Eine Reihe
  * von Service-Funktionen vervollständigt schließlich die für die Logik geforderte Funktionalität.
  * @author Uwe Rosner
@@ -42,9 +43,11 @@ public class Logic extends Observable implements Serializable {
     private ActionListener act;                               // der ActionListener
 
     /**
-     * Erzeugt eine neue Logik-Instanz. An den zu übergebenen ActionListener werden Ereignisse gesendet,
-     * die von ihm ausgewertet werden sollten.
-     * @param act ActionListener, der die gesendeten Ereignisse auswertet.
+     * Erzeugt eine neue Logik-Instanz. An den zu übergebenen
+     * ActionListener werden Ereignisse gesendet, die von ihm
+     * ausgewertet werden sollten.
+     * @param act ActionListener, der die gesendeten Ereignisse
+     * auswertet.
      */
     public Logic(ActionListener act) {
 
@@ -108,7 +111,8 @@ public class Logic extends Observable implements Serializable {
     }
 
     /**
-     * Fügt die übergebene Allgemeine Stelle in die Liste der Allgemeinen Stellen ein
+     * Fügt die übergebene Allgemeine Stelle in die Liste der
+     * Allgemeinen Stellen ein
      * @param element einzufügende Allgemeine Stelle
      */
     public void loadPlaceStorage(M_ElementRoot element){
@@ -116,7 +120,8 @@ public class Logic extends Observable implements Serializable {
     }
 
     /**
-     * Fügt die übergebene Eingabestelle in die Liste der Eingabestellen ein
+     * Fügt die übergebene Eingabestelle in die Liste der Eingabestellen
+     * ein
      * @param element einzufügende Eingabestelle
      */
     public void loadPlaceInput(M_ElementRoot element){
@@ -124,7 +129,8 @@ public class Logic extends Observable implements Serializable {
     }
 
     /**
-     * Fügt die übergebene Ausgabestelle in die Liste der Ausgabestellen ein
+     * Fügt die übergebene Ausgabestelle in die Liste der Ausgabestellen
+     * ein
      * @param element einzufügende Ausgabestelle
      */
     public void loadPlaceOutput(M_ElementRoot element){
@@ -251,22 +257,24 @@ public class Logic extends Observable implements Serializable {
     }
 
     /**
-     * Verbindet zwei Pins mit einer Kante. Die Kante wird im Erfolgsfall neu erstellt und der Liste
-     * der Kanten hinzugefügt.
+     * Verbindet zwei Pins mit einer Kante. Die Kante wird im
+     * Erfolgsfall neu erstellt und der Liste der Kanten hinzugefügt.
      * @param source Quellpin
      * @param destination Zielpin
      * @return true, wenn Anschließen erfolgreich, sonst false.
      */
     public boolean connectElements(M_Pin source, M_Pin destination) {
         // raus & Event werfen, wenn Zielpin bereits angeschlossen ist
-        // (bei Quellpins unnötig, wenn man auf einen angeschlossenen klickt, wird der ja abgeklemmt.)
+        // (bei Quellpins unnötig, wenn man auf einen angeschlossenen
+        // klickt, wird der ja abgeklemmt.)
         if(destination.isConnected() == true && destination.getAssignedElement().getElementType() == ME_ElementType.TRANSITION) {
             ActionEvent ev = new ActionEvent(this, 1, "Error_Connect_DstPinAlreadyConnected");
             act.actionPerformed(ev);
             return false;
         }
 
-        // raus & Event werfen, wenn auf eine Stelle keine Transition folgt 
+        // raus & Event werfen, wenn auf eine Stelle keine Transition
+        // folgt 
         if(source.getAssignedElement().getElementType() == ME_ElementType.PLACE) {
             if(destination.getAssignedElement().getElementType() != ME_ElementType.TRANSITION) {
                 ActionEvent ev = new ActionEvent(this, 1, "Error_Connect_PlaceNoTransition");
@@ -275,7 +283,8 @@ public class Logic extends Observable implements Serializable {
             }
         }
 
-        // raus & Event werfen, wenn auf eine Transition keine Stelle folgt
+        // raus & Event werfen, wenn auf eine Transition keine Stelle
+        // folgt
         if(source.getAssignedElement().getElementType() == ME_ElementType.TRANSITION) {
             if(destination.getAssignedElement().getElementType() != ME_ElementType.PLACE) {
                 ActionEvent ev = new ActionEvent(this, 1, "Error_Connect_TransitionNoPlace");
@@ -296,7 +305,8 @@ public class Logic extends Observable implements Serializable {
     }
 
     /**
-     * Entfernt eine Kante aus der Liste der Kanten und damit aus dem Petrinetz.
+     * Entfernt eine Kante aus der Liste der Kanten und damit aus dem
+     * Petrinetz.
      * @param link zu entfernende Kante
      */
     public void deleteLink(MI_Link link) {
@@ -306,8 +316,9 @@ public class Logic extends Observable implements Serializable {
     }
 
     /**
-     * Testet, ob das Petrinetz konsitent ist. Es wird geprüft, ob mindestens eine Transition und eine
-     * Ausgabestelle vorhanden sind und ob alle Transitionen vollständig angeschlossen sind.
+     * Testet, ob das Petrinetz konsistent ist. Es wird geprüft, ob
+     * mindestens eine Transition und eine Ausgabestelle vorhanden sind
+     * und ob alle Transitionen vollständig angeschlossen sind.
      * @return true, wenn Netz konsistent ist, sonst false.
      */
     public boolean isNetConsistent() {
@@ -319,11 +330,12 @@ public class Logic extends Observable implements Serializable {
                 return false;
         }
 
-        // Kommen alle Element-Typen, d.h. Transition und Ausgabestellen vor?
-        // Das ist das Minimum, sonst macht das Berechnungen keinen Sinn.
-        // Grund: Ein Rechen-Schritt gilt als ausgeführt, wenn an mindestens einer
-        // Ausgabestelle etwas ankommt. Ein Rechen-Schritt wird abgebrochen, wenn keine
-        // Transition rechnen konnte.
+        // Kommen alle Element-Typen, d.h. Transition und Ausgabestellen
+        // vor? Das ist das Minimum, sonst macht das Berechnungen keinen
+        // Sinn. Grund: Ein Rechen-Schritt gilt als ausgeführt, wenn an
+        // mindestens einer Ausgabestelle etwas ankommt. Ein
+        // Rechen-Schritt wird abgebrochen, wenn keine Transition
+        // rechnen konnte.
 
         if(vElementsTransition.size() == 0) {
             return false;
@@ -337,8 +349,10 @@ public class Logic extends Observable implements Serializable {
     }
 
     /**
-     * Testet, ob im letzten Schritt mindestens eine Transition arbeiten konnte.
-     * @return true, wenn mindestens eine Transition gearbeitet hat, sonst false.
+     * Testet, ob im letzten Schritt mindestens eine Transition arbeiten
+     * konnte.
+     * @return true, wenn mindestens eine Transition gearbeitet hat,
+     * sonst false.
      */
     public boolean hasAtLeastOneTransitionWorked() {
         return atLeastOneTransitionWorked;
@@ -390,9 +404,5 @@ public class Logic extends Observable implements Serializable {
         // Schritt erledigt
 
         return true;
-
-
-
     }
-
 }
