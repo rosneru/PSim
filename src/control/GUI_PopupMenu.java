@@ -23,7 +23,8 @@ public class GUI_PopupMenu extends JPopupMenu{
 
     /**
      * Konstruktor des Popup-Menüs.
-     * @param act Der ActionListener, an den die Events (bestimmter Menüpunkt gewählt) gesendet werden.
+     * @param act Der ActionListener, an den die Events (bestimmter
+     * Menüpunkt gewählt) gesendet werden.
      */
     public GUI_PopupMenu(ActionListener act) {
         // Die folgenden Strings enthalten die Texte für das aufzubauende Menü.
@@ -42,7 +43,8 @@ public class GUI_PopupMenu extends JPopupMenu{
         item.addActionListener(act);
         add_elements.add(item);
 
-        // Untermenü "Stelle" aufbauen und dem Menü "Element hinzufügen" hinzufügen
+        // Untermenü "Stelle" aufbauen und dem Menü "Element hinzufügen"
+        // hinzufügen
         places = new JMenu("Place");
         // Dem Untermenü "Stelle" die Menüpunkte hinzufügen
         for(int i=0; i< plStr.length; i++) {
